@@ -8,6 +8,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="Hexa_circle.js"></script>
 <script>
+  function afficher(){
+
   const ctx = document.getElementById('myChart');
 
   new Chart(ctx, {
@@ -16,8 +18,8 @@
       labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
       datasets: [
         {
-          label: '# of Votes',
-        data: [12, 19],
+          label: 'TEST',
+        data: data1,
         backgroundColor: [
             'rgba(255, 99, 132, 0.6)',
             'rgba(54, 162, 235, 0.6)',
@@ -27,7 +29,7 @@
             'rgba(54, 162, 235, 1)',
           ],
         borderWidth: 1
-      },{
+      }/*,{
         label: '# of Votes',
         data: [7, 5, 13, 1, 2, 8],
         backgroundColor: [
@@ -692,9 +694,9 @@
             'rgba(54, 162, 235, 1)',
           ],
           borderWidth: 1
-        }
+        }*/
       ]
-    },
+    },ctx,
     options: {
       responsive: true,
       plugins: {
@@ -708,4 +710,6 @@
       }
     }
   });
+
+}
 </script>
