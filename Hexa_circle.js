@@ -5,9 +5,10 @@ let codeTab = [];
 let data1 = [];
 let mondataset = [];
 
-
+console.log(toNumber('a'));
 
 function encoder() {
+  let x;
   code = [];
   codeTab = [];
   code = text.value.split("");
@@ -15,12 +16,14 @@ function encoder() {
     codeTab.push(AsciitoHexa(e));
   });
   console.log(codeTab);
-  //data1 = dataBuilder(codeTab[0]);
 
   codeTab.forEach(e => {
-    addDataset(dataBuilder(e));
+    x = e.split("");
+    x.forEach(y => {
+      addDataset(dataBuilder(y));
+    });
   });
-  console.log(data1);
+  console.log(mondataset);
   afficher();
 }
 
@@ -29,15 +32,19 @@ function AsciitoHexa(c) {
 }
 
 function dataBuilder(hexa){
-  let h = hexa.split("");
-  let h1 = h[0]/17 * 100;
+  if(isLetter(hexa)){
+    console.log("C'est une lettre");
+    console.log(hexa);
+    hexa = toNumber(hexa);
+    return [hexa, 100 - hexa]
+  }
+  let h1 = hexa/17 * 100;
   let h2 = 100 - h1;
   return [h1, h2];
 }
 
 function addDataset(data1){
-
-  const newDataset = {
+  let newDataset = {
     label: "Test",
     data: data1,
     backgroundColor: [
@@ -50,8 +57,32 @@ function addDataset(data1){
     ],
     borderWidth: 1
   }
-
   mondataset.push(newDataset);
+}
+
+function isLetter(c) {
+  return c.toLowerCase() != c.toUpperCase();
+}
+
+function toNumber(c){
+  let y = 100/17;
+  let x = 50 + y; // Valeur de 9  
+  switch(c){
+    case 'a':
+      return x + y;
+    case 'b':
+      return x + 2*y;
+    case 'c':
+      return x + 3*y;
+    case 'd':
+      return x + 4*y;
+    case 'e':
+      return x + 5*y;
+    case 'f':
+      return x + 6*y;  
+  }
+
+  console.log("Erreur : c n'est pas une lettre valide");
 }
 
 function afficher(){
@@ -75,9 +106,11 @@ function afficher(){
         },
         legend: {
           position: 'bottom'
-        }
+        },
       }
     }
   });
 
 }
+
+
