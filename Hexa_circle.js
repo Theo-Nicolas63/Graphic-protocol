@@ -1,29 +1,43 @@
 let text = document.getElementById("myText");
 let btn = document.getElementById("myBtn");
 let mySpan = document.getElementById("mySpan");
+
+//INDEX de positionnement des caractères dans le QR code
 let indexRedondance = [1, 14, 2, 15, 3, 16, 4, 17, 5, 18, 6, 19, 7, 20, 8, 21, 9, 22, 10, 23, 11, 24, 12, 25, 13, 26];
+
+//Tableau de caractères du message
 let code = [];
+
+//Tableau de code hexa de tous les caractères du message
 let codeTab = [];
-let data1 = [];
+
+//DATASET qui contient les données pour le graphique
 let mondataset = [];
+
+//Donneés pour rendondance 
+let dataSetRedondance = [];
 
 console.log(toNumber('a'));
 
 function encoder() {
   let x;
+  let lenMessage;
+  let parite = 0;
+  let i = 0;
   code = [];
   codeTab = [];
   mondataset = [];
   message = text.value;
-  if(lengthMessage(message) > 26){
+  lenMessage = lengthMessage(message);
+  if(lenMessage > 26){
     mySpan.innerHTML = "Votre message est trop long";
     return;
   }
   else{
     mySpan.innerHTML = "";
   }
-  code = message.split("");
-  code = redondance(code);
+  code = message.split(""); // Separation de tous les caractères du message dans un tableau
+  code = redondance(code);  
   code.forEach(e => {
     codeTab.push(AsciitoHexa(e));
   });
@@ -32,7 +46,15 @@ function encoder() {
   codeTab.forEach(e => {
     x = e.split("");
     x.forEach(y => {
-      addDataset(dataBuilder(y));
+      //if(pariteCondition(lenMessage, parite, x.length, i)){
+        addDataset(dataBuilder(y, 0), 1); // Construction du dataset 
+        addDataset(dataBuilder(y, 1), 2); // Construction du dataset pour la redondance
+        parite++;
+     // }
+      //else {
+       // addDataset(dataBuilder(y), 0);
+      //}
+      i++;
     });
   });
   console.log(mondataset);
@@ -43,33 +65,60 @@ function AsciitoHexa(c) {
   return c.charCodeAt(0).toString(16);
 }
 
-function dataBuilder(hexa){
-  if(isLetter(hexa)){
+function isPair(n){
+  if(n%2 == 0){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+function dataBuilder(hexa, x){
+  if(isLetter(hexa)){ // Verification que l'hexa est une lettre, si oui alors conversion 
     console.log("C'est une lettre");
     console.log(hexa);
     hexa = toNumber(hexa);
-    return [hexa, 100 - hexa]
+
+    if(x == 0)
+      return [hexa, 100 - hexa]; 
+    return [100 - hexa, hexa]
   }
-  let h1 = hexa/17 * 100;
-  let h2 = 100 - h1;
-  return [h1, h2];
+  let h1 = hexa/17 * 100; // Calcul : cercle divisé sur 17 parties à mettre en pourcentage
+  let h2 = 100 - h1; // Calcul : reste du cercle
+
+  if(x == 0)
+    return [h1, h2]; // Retourne les pourcentages => h1 est les données et h2 est le reste du cercle
+
+  return [h2, h1]; // Retourne l'inverse pour la redondance
 }
 
-function addDataset(data1){
+function addDataset(data1, x){
+  
   let newDataset = {
     label: "Test",
     data: data1,
     backgroundColor: [
-      'rgba(255, 99, 132, 0.6)',
-      'rgba(54, 162, 235, 0.6)',
+      'rgba(112,128,144)',
+      'rgba(255, 255, 255)',
     ],
     borderColor: [
-      'rgba(255, 99, 132, 1)',
-      'rgba(54, 162, 235, 1)',
+      'rgba(0,0,0)',
+      'rgba(0, 0, 0)',
     ],
     borderWidth: 1
   }
-  mondataset.push(newDataset);
+
+  if(x == 2){ // Si 2 alors redondance donc ajout au dataset de redondance
+    newDataset.backgroundColor[0] = 'rgba(255, 255, 255)';
+    newDataset.backgroundColor[1] = 'rgba(0, O, 0)';
+    newDataset.borderColor[0] = 'rgba(0, 0, 0)';
+    newDataset.borderColor[1] = 'rgba(0, 0, 0)';
+    dataSetRedondance.push(newDataset);
+  }
+  else {
+    mondataset.push(newDataset);
+  }
 }
 
 function isLetter(c) {
@@ -100,12 +149,19 @@ function toNumber(c){
 function afficher(){
   console.log(mondataset);
 
+  dataSetRedondance.reverse();
+  dataSetRedondance.forEach(e => {
+    mondataset.unshift(e);
+  });
+
+  console.log(mondataset);
+
   const ctx = document.getElementById('myChart');
 
   new Chart(ctx, {
     type: 'pie',
     data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      labels: ['Data', 'No Data'],
       datasets: mondataset
 
     },ctx,
@@ -114,7 +170,7 @@ function afficher(){
       plugins: {
         title: {
           display: true,
-          text: 'Multi-Series Pie Chart'
+          text: 'Protocole graphique'
         },
         legend: {
           position: 'bottom'
@@ -144,6 +200,16 @@ function redondance(code){
   console.log(codeRedondance);
 
   return codeRedondance;
+}
+
+function pariteCondition(lenMessage, parite, x, i){
+  /*if(isPair(lenMessage) && !isPair(parite) && x - i > 1)
+    return true;
+
+  if(!isPair(lenMessage) && isPair(parite) && x - i > 1)
+    return true;
+  */
+  return false;  
 }
 
 
