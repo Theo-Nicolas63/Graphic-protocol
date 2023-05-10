@@ -3,7 +3,7 @@ let btn = document.getElementById("myBtn");
 let mySpan = document.getElementById("mySpan");
 
 //INDEX de positionnement des caractères dans le QR code
-let indexRedondance = [1, 14, 2, 15, 3, 16, 4, 17, 5, 18, 6, 19, 7, 20, 8, 21, 9, 22, 10, 23, 11, 24, 12, 25, 13, 26];
+let index = [1, 14, 2, 15, 3, 16, 4, 17, 5, 18, 6, 19, 7, 20, 8, 21, 9, 22, 10, 23, 11, 24, 12, 25, 13, 26];
 
 //Tableau de caractères du message
 let code = [];
@@ -19,7 +19,7 @@ let dataSetRedondance = [];
 
 console.log(toNumber('a'));
 
-function encoder() {
+function encoder(isSimple) {
   let x;
   let lenMessage;
   let parite = 0;
@@ -37,7 +37,7 @@ function encoder() {
     mySpan.innerHTML = "";
   }
   code = message.split(""); // Separation de tous les caractères du message dans un tableau
-  code = redondance(code);  
+  code = indexage(code, isSimple);  
   code.forEach(e => {
     codeTab.push(AsciitoHexa(e));
   });
@@ -47,8 +47,10 @@ function encoder() {
     x = e.split("");
     x.forEach(y => {
       //if(pariteCondition(lenMessage, parite, x.length, i)){
-        addDataset(dataBuilder(y, 0), 1); // Construction du dataset 
-        addDataset(dataBuilder(y, 1), 2); // Construction du dataset pour la redondance
+        addDataset(dataBuilder(y, 0), 1); // Construction du dataset
+
+        if(isSimple == 0)
+          addDataset(dataBuilder(y, 1), 2); // Construction du dataset pour la redondance
         parite++;
      // }
       //else {
@@ -186,18 +188,28 @@ function lengthMessage(message){
   return message.length;
 }
 
-function redondance(code){
-  let codeRedondance = [26]; // Tableau de 26 cases
-  for(let i = 0; i < 26; i++){ // Initialisation du tableau
-    codeRedondance[i] = " ";
+function indexage(code, x){
+  let codeRedondance = [];
+  if(x == 0){
+    codeRedondance = [26]; // Tableau de 26 cases
+    
+    for(let i = 0; i < 26; i++){ // Initialisation du tableau
+      codeRedondance[i] = " ";
+    }
+
+    let i = 1;
+    
+    code.forEach(c => { // Remplissage du tableau avec les caractères du message aux positions du qr code (voir rapport)
+      codeRedondance[index.indexOf(i)] = c;
+      i++;
+    });
+
+    return codeRedondance;
   }
 
-  let i = 1;
-  code.forEach(c => { // Remplissage du tableau avec les caractères du message aux positions du qr code (voir rapport)
-    codeRedondance[indexRedondance.indexOf(i)] = c;
-    i++;
+  code.forEach(c => {
+    codeRedondance.push(c);
   });
-  console.log(codeRedondance);
 
   return codeRedondance;
 }
