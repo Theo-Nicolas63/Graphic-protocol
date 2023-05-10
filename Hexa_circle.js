@@ -29,8 +29,8 @@ function encoder(isSimple) {
   mondataset = [];
   message = text.value;
   lenMessage = lengthMessage(message);
-  if(lenMessage > 26){
-    mySpan.innerHTML = "Votre message est trop long";
+  if(lenMessage > 26 || lenMessage == 0){
+    mySpan.innerHTML = "Votre message n'est pas valide";
     return;
   }
   else{

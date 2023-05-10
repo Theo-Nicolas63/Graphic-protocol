@@ -1,14 +1,28 @@
-<div style="width: 70%;">
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Protocole graphique</title>
+  <link rel="stylesheet" href="Hexa_circle.css">
+</head>
+
+<div class="form">
   <label>Tapez le texte que vous voulez encoder :</label>
-  <input type="text" id="myText" placeholder="Mon message"></div>
-  <button id="myBtn" type="submit" onclick="encoder(0);">Encoder</button>
-  <button id="myBtn2" type="submit" onclick="encoder(1);">Encodage simple</button>
+  <input type="text" id="myText" class="myInput" placeholder="Mon message">
+  <button id="myBtn" class="btn" type="submit" onclick="encoder(0);">Encoder</button>
+  <button id="myBtn2" class="btn" type="submit" onclick="encoder(1);">Encodage simple</button>
   <span id="mySpan"></span>
-  <div id="ChartContainer" style="width: 100%; height: 100%;">
-    <canvas id="myChart"></canvas>
+</div>
+<div class="container">
+  <div id="ChartContainer">
+    <canvas id="myChart" class="myCanva"></canvas>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="Hexa_circle.js"></script>
+</html>
+
+
   
+
