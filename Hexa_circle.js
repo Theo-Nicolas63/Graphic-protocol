@@ -57,15 +57,13 @@ function encoder(isSimple) {
   }
 
   codeTab = indexage(codeTab, isSimple); // appel de la fonction indexage qui mixe l'odre d'apparition
-
   codeTab.forEach(e => { // Pour chaque caractère ASCII présent dans codeTab
     x = e.split("");
     x.forEach(y => {
 
 
         addDataset(dataBuilder(y, 0), 1); // Construction du dataset et ajout à la liste des dataset
-
-        if(isSimple == 0 && i<27) // Si codage avec redondance et i < 27 car pas de redondance sur le CRC
+        if(isSimple == 0) // Si codage avec redondance et pas sur les 4 derniers car pas de redondance sur le CRC
           addDataset(dataBuilder(y, 1), 2); // Construction du dataset pour la redondance
 
       i++;
